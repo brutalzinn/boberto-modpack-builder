@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modpack_manager/modpack/bloc/modpack_bloc_state.dart';
+import 'package:modpack_manager/modpack/models/enums.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-
-import 'bloc/loader_bloc.dart';
 import 'bloc/modpack_bloc.dart';
 
 class ModpackPage extends StatelessWidget {
@@ -13,8 +13,8 @@ class ModpackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Solve the equatable problem here. Its doenst update the state :(
     final modpackBloc = BlocProvider.of<ModpackBloc>(context);
-    final loaderBloc = BlocProvider.of<LoaderBloc>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -31,7 +31,7 @@ class ModpackPage extends StatelessWidget {
               TextField(
                 controller: modPackNameController,
                 onChanged: (value) {
-                  modpackBloc.add(value);
+                  modpackBloc.state.name = value;
                 },
               ),
               const SizedBox(height: 20.0),
@@ -42,7 +42,7 @@ class ModpackPage extends StatelessWidget {
               TextField(
                 controller: minecraftVersionController,
                 onChanged: (value) {
-                  modpackBloc.add(value);
+                  modpackBloc.state.gameVersion = value;
                 },
               ),
               const SizedBox(height: 20.0),
@@ -50,32 +50,32 @@ class ModpackPage extends StatelessWidget {
                 'Select mod loader:',
               ),
               const SizedBox(height: 10.0),
-              BlocBuilder<LoaderBloc, String>(
+              BlocBuilder<ModpackBloc, ModPackBlocState>(
                 builder: (context, state) {
                   return Column(
                     children: [
-                      RadioListTile<String>(
+                      RadioListTile<ModLoaderType>(
                         title: const Text('Forge'),
-                        value: 'Forge',
-                        groupValue: state,
+                        value: ModLoaderType.forge,
+                        groupValue: state.modLoaderType,
                         onChanged: (value) {
-                          loaderBloc.add(value);
+                          modpackBloc.state.copyWith(modLoaderType: value);
                         },
                       ),
-                      RadioListTile<String>(
+                      RadioListTile<ModLoaderType>(
                         title: const Text('Fabric'),
-                        value: 'Fabric',
-                        groupValue: state,
+                        value: ModLoaderType.fabric,
+                        groupValue: state.modLoaderType,
                         onChanged: (value) {
-                          loaderBloc.add(value);
+                          modpackBloc.state.copyWith(modLoaderType: value);
                         },
                       ),
-                      RadioListTile<String>(
+                      RadioListTile<ModLoaderType>(
                         title: const Text('Vanilla'),
-                        value: 'Vanilla',
-                        groupValue: state,
+                        value: ModLoaderType.vanilla,
+                        groupValue: state.modLoaderType,
                         onChanged: (value) {
-                          loaderBloc.add(value);
+                          modpackBloc.state.copyWith(modLoaderType: value);
                         },
                       ),
                     ],

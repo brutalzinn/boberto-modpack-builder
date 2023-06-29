@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modpack_manager/modpack/bloc/modpack_bloc_state.dart';
 import 'package:modpack_manager/modpack/modpack.dart';
-import 'modpack/bloc/loader_bloc.dart';
 import 'modpack/bloc/modpack_bloc.dart';
 
 void main() {
@@ -17,6 +17,7 @@ void main() {
 */
 
 class HomePage extends StatelessWidget {
+  final _initialModPackState = ModPackBlocState.createDefault();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,10 +39,7 @@ class HomePage extends StatelessWidget {
         home: MultiBlocProvider(
           providers: [
             BlocProvider<ModpackBloc>(
-              create: (context) => ModpackBloc(),
-            ),
-            BlocProvider<LoaderBloc>(
-              create: (context) => LoaderBloc(),
+              create: (context) => ModpackBloc(_initialModPackState),
             ),
           ],
           child: ModpackPage(),
